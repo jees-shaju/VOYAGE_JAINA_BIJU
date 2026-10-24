@@ -109,6 +109,45 @@ Visit `http://localhost:5173/` in your browser.
 
 ---
 
+## ☁️ Deploy to Vercel and Render
+
+The frontend is deployed to Vercel and the Django API plus PostgreSQL database
+to Render. The root `render.yaml` defines the backend web service and database.
+
+### 1. Deploy the backend on Render
+
+1. Push this repository to GitHub and create a new **Blueprint** in Render using
+   the repository. Render reads `render.yaml` and creates the API service and
+   PostgreSQL database.
+2. When prompted for `CORS_ALLOWED_ORIGINS`, enter the full Vercel site origin,
+   such as `https://your-project.vercel.app` (no trailing slash). Add any
+   additional Vercel/custom domains as comma-separated origins.
+3. After deployment, copy the API URL, for example
+   `https://samarth-api.onrender.com`.
+
+Render installs `backend/requirements.txt`, collects static files, and runs
+database migrations before starting the web service. The database URL, secret
+key, allowed hosts, and production debug setting are configured by the
+Blueprint. Do not run `seed_data` on a production database; it resets the
+passwords of demo accounts. To create a production administrator, open the
+Render service shell and run `python manage.py createsuperuser`.
+
+### 2. Deploy the frontend on Vercel
+
+1. Import the same GitHub repository into Vercel and set **Root Directory** to
+   `frontend`. Vercel uses `frontend/vercel.json` to serve the React app on
+   direct route visits.
+2. Add the environment variable `VITE_API_BASE_URL` with the full API base URL,
+   for example `https://samarth-api.onrender.com/api`.
+3. Deploy or redeploy the frontend after setting the variable.
+4. If the Vercel domain changes, update the Render service's
+   `CORS_ALLOWED_ORIGINS` environment variable and redeploy/restart the API.
+
+For local development, `VITE_API_BASE_URL` can remain unset; the app keeps its
+local API URL and Vite development proxy.
+
+---
+
 ## 📐 Icon & Accessibility Standards
 
 - All icons use standard **Lucide React** stroke weights and sizing (14–16px inline badges, 18–20px inputs/buttons, 20–24px navigation).
