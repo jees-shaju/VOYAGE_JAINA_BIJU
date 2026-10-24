@@ -1,0 +1,168 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "SAMARTH Frontend",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"dev",
+				"--",
+				"--host",
+				"127.0.0.1"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Backend",
+			"type": "shell",
+			"command": "C:\\Users\\jaina\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+			"args": [
+				"backend\\manage.py",
+				"runserver",
+				"127.0.0.1:8000"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Frontend Build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Frontend Validation",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Frontend Lint",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"lint"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Backend Tests",
+			"type": "shell",
+			"command": "C:\\Users\\jaina\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+			"args": [
+				"backend\\manage.py",
+				"test",
+				"api"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Flow Fix Build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Flow Fix Lint",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"lint"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Targeted Backend Tests",
+			"type": "shell",
+			"command": "C:\\Users\\jaina\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+			"args": [
+				"backend\\manage.py",
+				"test",
+				"api.tests.SamarthBackendTests.test_05_booking_lifecycle_and_review",
+				"api.tests.SamarthBackendTests.test_07_cancellation_workflow",
+				"api.tests.SamarthBackendTests.test_08_public_registration_cannot_create_admin",
+				"api.tests.SamarthBackendTests.test_09_customer_cannot_edit_another_worker_profile",
+				"api.tests.SamarthBackendTests.test_10_worker_cannot_edit_customer_job_request",
+				"api.tests.SamarthBackendTests.test_11_customer_cannot_edit_worker_quote",
+				"api.tests.SamarthBackendTests.test_12_customer_cannot_edit_booking_lifecycle_directly",
+				"api.tests.SamarthBackendTests.test_13_customer_cannot_delete_review"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Verified Frontend Build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Final Lint",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"lint"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "SAMARTH Final Landing Build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"frontend",
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

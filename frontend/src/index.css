@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #116B63;
+  --color-primary-dark: #0B4945;
+  --color-mint: #EAF5F1;
+  --color-main-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-text-main: #172B2A;
+  --color-text-muted: #64748B;
+  --color-border-line: #E2E8F0;
+  --color-success: #16845B;
+  --color-warning: #B7791F;
+  --color-error: #C24141;
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Manrope', 'Inter', sans-serif;
+}
+
+:root {
+  --primary: #116B63;
+  --primary-dark: #0B4945;
+  --mint: #EAF5F1;
+  --main-bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --text-main: #172B2A;
+  --text-muted: #64748B;
+  --border-line: #E2E8F0;
+  --success: #16845B;
+  --warning: #B7791F;
+  --error: #C24141;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #F8FAFC;
+  color: #172B2A;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+/* Icon Alignment and Component Standards */
+.icon-aligned-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.icon-aligned-btn svg,
+.icon-container svg {
+  flex-shrink: 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
