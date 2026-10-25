@@ -23,4 +23,11 @@ if [ "${AUTO_SEED_DATA:-false}" = "true" ]; then
     python manage.py seed_data
 fi
 
+# Reset admin password if DJANGO_ADMIN_PASSWORD environment variable is provided
+if [ -n "$DJANGO_ADMIN_PASSWORD" ]; then
+    echo "==> Updating admin password from DJANGO_ADMIN_PASSWORD..."
+    python -c "import django, os; os.environ['DJANGO_SETTINGS_MODULE']='samarth_project.settings'; django.setup(); from django.contrib.auth import get_user_model; U = get_user_model(); u = U.objects.filter(username='admin').first(); (u.set_password(os.environ['DJANGO_ADMIN_PASSWORD']), u.save()) if u else None; print('==> Admin password updated successfully!')"
+fi
+
 echo "==> Backend build completed successfully!"
+
