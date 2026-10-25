@@ -1,4 +1,4 @@
-SAMARTH — Skills Deserve Opportunity
+# SAMARTH — Skills Deserve Opportunity
 
 ## Good work deserves to be seen, valued, and trusted.
 
