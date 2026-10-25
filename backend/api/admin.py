@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import (
     User, ServiceCategory, WorkerProfile, WorkerSkill,
     JobRequest, Quote, Booking, Review, VerificationRecord
@@ -6,10 +7,14 @@ from .models import (
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseUserAdmin):
     list_display = ('username', 'full_name', 'email', 'role', 'phone', 'locality', 'is_staff')
     list_filter = ('role', 'is_staff', 'is_superuser')
     search_fields = ('username', 'full_name', 'email', 'phone')
+    fieldsets = BaseUserAdmin.fieldsets + (
+        ('SAMARTH Profile', {'fields': ('role', 'full_name', 'phone', 'avatar_url', 'locality')}),
+    )
+
 
 
 @admin.register(ServiceCategory)
