@@ -1,28 +1,64 @@
 import React, { useState } from 'react';
 import {
   Sparkles, User, Wrench, Shield, Compass, CheckCircle2,
-  ArrowRight, X, ChevronRight, Layers, Star, Info
+  ArrowRight, X, ChevronRight, Layers, Star, Info,
+  Lock, KeyRound, AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Button from './Button';
 import Modal from './Modal';
 
 export default function DemoTourBar({ onNavigate }) {
-  const { user, switchDemoAccount, isCustomer, isWorker, isAdmin } = useAuth();
+  const { user, login, switchDemoAccount, isCustomer, isWorker, isAdmin } = useAuth();
   const [tourOpen, setTourOpen] = useState(false);
   const [switching, setSwitching] = useState(false);
+
+  // Protected Admin Access States
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [adminUsername, setAdminUsername] = useState('admin');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminError, setAdminError] = useState(null);
+  const [adminLoading, setAdminLoading] = useState(false);
 
   const handleRoleSwitch = async (role) => {
     setSwitching(true);
     try {
       const loggedUser = await switchDemoAccount(role);
       if (role === 'CUSTOMER') onNavigate('customer-dashboard');
-      else if (role === 'ADMIN') onNavigate('admin-dashboard');
       else onNavigate('worker-dashboard');
     } catch (e) {
       console.error(e);
     } finally {
       setSwitching(false);
+    }
+  };
+
+  const handleAdminButtonClick = () => {
+    if (isAdmin) {
+      onNavigate('admin-dashboard');
+    } else {
+      setAdminError(null);
+      setAdminPassword('');
+      setAdminModalOpen(true);
+    }
+  };
+
+  const handleAdminLoginSubmit = async (e) => {
+    e.preventDefault();
+    if (!adminPassword.trim()) {
+      setAdminError('Please enter the administrator password.');
+      return;
+    }
+    setAdminLoading(true);
+    setAdminError(null);
+    try {
+      await login(adminUsername.trim(), adminPassword);
+      setAdminModalOpen(false);
+      onNavigate('admin-dashboard');
+    } catch (err) {
+      setAdminError(err.message || 'Invalid administrator credentials.');
+    } finally {
+      setAdminLoading(false);
     }
   };
 
@@ -59,9 +95,9 @@ export default function DemoTourBar({ onNavigate }) {
     },
     {
       num: 6,
-      role: 'Admin',
+      role: 'Admin (Protected)',
       title: 'Manual Verification Oversight',
-      desc: 'Switch to Admin Officer. Review pending worker documents (Aadhaar/Trade license) and grant or reject Verified Pro badges.',
+      desc: 'Authenticate as Admin Officer. Review pending worker documents (Aadhaar/Trade license) and grant or reject Verified Pro badges.',
     },
   ];
 
@@ -82,7 +118,7 @@ export default function DemoTourBar({ onNavigate }) {
           </span>
         </div>
 
-        {/* Center: 1-Click Fast Role Switch Buttons */}
+        {/* Center: Fast Role Switch Buttons */}
         <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
           <button
             disabled={switching}
@@ -111,13 +147,16 @@ export default function DemoTourBar({ onNavigate }) {
             <span>Plumber (Suresh)</span>
           </button>
 
+          {/* Protected Admin Button */}
           <button
             disabled={switching}
-            onClick={() => handleRoleSwitch('ADMIN')}
+            onClick={handleAdminButtonClick}
             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${isAdmin ? 'bg-rose-700 text-white ring-1 ring-rose-300 shadow-xs' : 'bg-teal-900/60 hover:bg-teal-800 text-rose-200'}`}
+            title={isAdmin ? "Open Admin Control Center" : "Admin Control Center (Password Protected)"}
           >
-            <Shield size={12} />
+            <Shield size={12} className={isAdmin ? "text-rose-200" : "text-rose-400"} />
             <span>Admin</span>
+            {!isAdmin && <Lock size={10} className="text-rose-300/80" />}
           </button>
         </div>
 
@@ -144,7 +183,7 @@ export default function DemoTourBar({ onNavigate }) {
         maxWidth="max-w-2xl"
         footer={
           <div className="flex items-center justify-between w-full">
-            <span className="text-xs text-[#64748B]">All workflows backed by live SQLite database & DRF APIs</span>
+            <span className="text-xs text-[#64748B]">All workflows backed by live PostgreSQL database & DRF APIs</span>
             <Button variant="primary" size="sm" onClick={() => setTourOpen(false)}>
               Got it, let's test!
             </Button>
@@ -174,6 +213,84 @@ export default function DemoTourBar({ onNavigate }) {
             </div>
           ))}
         </div>
+      </Modal>
+
+      {/* PROTECTED ADMIN AUTHENTICATION MODAL */}
+      <Modal
+        isOpen={adminModalOpen}
+        onClose={() => setAdminModalOpen(false)}
+        title="Admin Control Center — Protected Access"
+        subtitle="Administrator privileges require verified superuser credentials."
+        maxWidth="max-w-md"
+      >
+        <form onSubmit={handleAdminLoginSubmit} className="space-y-4">
+          <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
+            <Shield size={16} className="text-amber-700 shrink-0 mt-0.5" />
+            <div className="leading-relaxed">
+              <strong>Admin verification required.</strong> To access worker ID review, platform stats, and compliance logs, enter your administrator password.
+            </div>
+          </div>
+
+          {adminError && (
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
+              <AlertCircle size={15} className="shrink-0 text-rose-600" />
+              <span>{adminError}</span>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-xs font-bold text-[#172B2A] mb-1">
+              Admin Username
+            </label>
+            <input
+              type="text"
+              value={adminUsername}
+              onChange={(e) => setAdminUsername(e.target.value)}
+              required
+              className="w-full px-3 py-2 rounded-xl border border-[#CBD5E1] text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#116B63] bg-slate-50"
+              placeholder="e.g. admin or admin@samarth.in"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-[#172B2A] mb-1">
+              Admin Password
+            </label>
+            <input
+              type="password"
+              autoFocus
+              value={adminPassword}
+              onChange={(e) => setAdminPassword(e.target.value)}
+              required
+              className="w-full px-3 py-2 rounded-xl border border-[#CBD5E1] text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#116B63]"
+              placeholder="Enter admin password"
+            />
+            <p className="text-[11px] text-[#64748B] mt-1">
+              Default seeded password is <code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-slate-800">admin123</code>
+            </p>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setAdminModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              loading={adminLoading}
+              icon={KeyRound}
+              className="bg-rose-700 hover:bg-rose-800"
+            >
+              Verify & Enter Admin
+            </Button>
+          </div>
+        </form>
       </Modal>
     </>
   );

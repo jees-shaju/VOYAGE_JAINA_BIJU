@@ -82,9 +82,10 @@ export function AuthProvider({ children }) {
       username = 'worker_amit';
       password = 'worker123';
     } else if (accountType === 'ADMIN') {
-      username = 'admin';
-      password = 'admin123';
+      // Admin account is protected and cannot be auto-switched without explicit password entry
+      throw new Error('Admin role requires manual password verification.');
     }
+
 
     try {
       const loggedUser = await login(username, password);

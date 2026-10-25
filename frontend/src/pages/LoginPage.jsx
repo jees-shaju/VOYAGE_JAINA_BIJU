@@ -167,18 +167,36 @@ export default function LoginPage({ onNavigate, onLoginSuccess }) {
               <span className="text-[10px] text-[#116B63] bg-[#EAF5F1] px-2 py-0.5 rounded font-semibold">Verified</span>
             </button>
 
-            <button
-              onClick={() => handleQuickDemo('ADMIN')}
-              className="w-full text-left p-2.5 rounded-xl bg-white border border-rose-200 hover:border-rose-400 hover:shadow-xs transition-all flex items-center justify-between text-xs"
-            >
-              <div className="flex items-center gap-2">
-                <Shield size={16} className="text-rose-600 shrink-0" />
-                <span className="font-bold text-rose-900">Admin Control Officer</span>
+            <div className="p-3 rounded-xl bg-rose-50/70 border border-rose-200 text-xs space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 font-bold text-rose-900">
+                  <Shield size={15} className="text-rose-600 shrink-0" />
+                  <span>Admin / Superuser</span>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full border border-rose-200">
+                  Protected
+                </span>
               </div>
-              <span className="text-[10px] text-rose-700 bg-rose-50 px-2 py-0.5 rounded font-semibold">Admin</span>
-            </button>
+              <p className="text-[11px] text-rose-700 leading-relaxed">
+                Superuser access requires verified credentials. Automatic bypass is disabled.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setUsername('admin');
+                  setPassword('');
+                  setError('Please enter the administrator password.');
+                  const pwdInput = document.querySelector('input[type="password"]');
+                  if (pwdInput) pwdInput.focus();
+                }}
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-700 hover:text-rose-900 underline cursor-pointer"
+              >
+                Pre-fill "admin" & enter password &rarr;
+              </button>
+            </div>
           </div>
         </div>
+
 
       </div>
     </div>
