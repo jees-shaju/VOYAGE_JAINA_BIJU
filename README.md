@@ -148,6 +148,9 @@ local API URL and Vite development proxy.
 
 ---
 
+---FOR ADMIN ACCESS ---
+    USERNAME:admin 
+   PASSWORD:admin123
 ## 📐 Icon & Accessibility Standards
 
 - All icons use standard **Lucide React** stroke weights and sizing (14–16px inline badges, 18–20px inputs/buttons, 20–24px navigation).
