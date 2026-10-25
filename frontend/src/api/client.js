@@ -3,9 +3,17 @@
  * Seamless communication with Django REST Framework backend
  */
 
-const BASE_URL = (
+const rawBaseUrl = (
   import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api'
-).replace(/\/+$/, '');
+).trim();
+
+// Normalize: remove trailing slash, and append /api if not already present
+let cleanBaseUrl = rawBaseUrl.replace(/\/+$/, '');
+if (!cleanBaseUrl.endsWith('/api')) {
+  cleanBaseUrl += '/api';
+}
+const BASE_URL = cleanBaseUrl;
+
 
 function getHeaders() {
   const token = localStorage.getItem('samarth_token');

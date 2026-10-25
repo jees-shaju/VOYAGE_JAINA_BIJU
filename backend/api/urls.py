@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     register_view, login_view, current_user_view, logout_view,
+    health_check_view,
     ServiceCategoryViewSet, WorkerProfileViewSet, JobRequestViewSet,
     QuoteViewSet, BookingViewSet, ReviewViewSet, AdminViewSet
 )
@@ -16,6 +17,9 @@ router.register(r'reviews', ReviewViewSet, basename='review')
 router.register(r'admin-ops', AdminViewSet, basename='admin-ops')
 
 urlpatterns = [
+    # Health check for deployment monitoring
+    path('health/', health_check_view, name='health-check'),
+
     # Authentication endpoints
     path('auth/register/', register_view, name='auth-register'),
     path('auth/login/', login_view, name='auth-login'),

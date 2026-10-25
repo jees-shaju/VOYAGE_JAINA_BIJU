@@ -620,3 +620,21 @@ class AdminViewSet(viewsets.ViewSet):
             'message': f"Worker {worker.user.full_name} status updated to {worker.verification_status}.",
             'worker': WorkerProfileSerializer(worker).data
         })
+
+
+# ==========================================
+# HEALTH CHECK VIEW
+# ==========================================
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def health_check_view(request):
+    """
+    Lightweight health check endpoint for Render / uptime monitoring.
+    """
+    return Response({
+        'status': 'healthy',
+        'service': 'samarth-api',
+        'timestamp': timezone.now().isoformat()
+    }, status=status.HTTP_200_OK)
+

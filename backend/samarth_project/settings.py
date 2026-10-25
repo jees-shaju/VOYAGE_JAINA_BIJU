@@ -17,10 +17,16 @@ if not SECRET_KEY:
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
-        'DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1'
+        'DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,testserver,.onrender.com'
     ).split(',')
     if host.strip()
 ]
+
+# Automatically register Render external hostname if provided by the environment
+render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if render_host and render_host not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_host)
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -104,6 +110,9 @@ REST_FRAMEWORK = {
     ],
 }
 
+# CORS Configuration
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'false').lower() == 'true'
+
 CORS_ALLOWED_ORIGINS = [
     origin.strip().rstrip('/')
     for origin in os.environ.get(
@@ -112,7 +121,34 @@ CORS_ALLOWED_ORIGINS = [
     ).split(',')
     if origin.strip()
 ]
+
+# Automatically allow Vercel previews and Render services
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/.*\.vercel\.app$",
+    r"^https:\/\/.*\.onrender\.com$",
+]
+
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF Configuration (Crucial for Django 4/5/6 POST/Admin requests over HTTPS)
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip().rstrip('/')
+    for origin in os.environ.get(
+        'CSRF_TRUSTED_ORIGINS',
+        os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173'),
+    ).split(',')
+    if origin.strip()
+]
+
+for default_pattern in ['https://*.vercel.app', 'https://*.onrender.com']:
+    if default_pattern not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(default_pattern)
+
+if render_host:
+    render_origin = f"https://{render_host}"
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
+
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
